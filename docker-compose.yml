@@ -7,6 +7,8 @@ services:
       - "5000:5000"
     environment:
       - SECONDARIES=http://secondary1:5001,http://secondary2:5001
+      - SECONDARY_TIMEOUT=30
+      - PORT=5000
     depends_on:
       - secondary1
       - secondary2
@@ -15,8 +17,14 @@ services:
     build: ./secondary
     ports:
       - "5001:5001"
+    environment:
+      - SECONDARY_DELAY_SEC=5
+      - PORT=5001
 
   secondary2:
     build: ./secondary
     ports:
       - "5002:5001"
+    environment:
+      - SECONDARY_DELAY_SEC=10
+      - PORT=5001
