@@ -1,30 +1,28 @@
-version: "3.9"
-
+version: '3.8'
 services:
   master:
     build: ./master
     ports:
-      - "5000:5000"
+      - "8000:8000"
     environment:
-      - SECONDARIES=http://secondary1:5001,http://secondary2:5001
-      - SECONDARY_TIMEOUT=30
-      - PORT=5000
-    depends_on:
-      - secondary1
-      - secondary2
-
-  secondary1:
+      - SECONDARIES=http://s1:8001,http://s2:8002
+      - MASTER_HOST=master
+  s1:
     build: ./secondary
     ports:
-      - "5001:5001"
+      - "8001:8001"
     environment:
-      - SECONDARY_DELAY_SEC=5
-      - PORT=5001
-
-  secondary2:
+      - REPLICA_ID=s1
+      - REPLICA_PORT=8001
+      - MASTER_URL=http://master:8000
+      - PROCESS_DELAY_MS=3000
+  s2:
     build: ./secondary
     ports:
-      - "5002:5001"
+      - "8002:8002"
     environment:
-      - SECONDARY_DELAY_SEC=10
-      - PORT=5001
+      - REPLICA_ID=s2
+      - REPLICA_PORT=8002
+      - MASTER_URL=http://master:8000
+      - PROCESS_DELAY_MS=10000
+      - START_DELAY_SEC=0
